@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>🍺 Urlaubs-Bier-Counter</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5d76e, #e8a33d);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    padding: 20px;
+  }
+  .card {
+    background: #fffbe9;
+    border-radius: 24px;
+    padding: 36px 40px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    max-width: 380px;
+    width: 100%;
+  }
+  h1 {
+    margin: 0 0 4px;
+    font-size: 1.5em;
+    color: #7a4a12;
+  }
+  .sub {
+    color: #9a6a2e;
+    font-size: 0.85em;
+    margin-bottom: 20px;
+  }
+  .count {
+    font-size: 4.2em;
+    font-weight: bold;
+    color: #b8722a;
+    margin: 4px 0;
+    user-select: none;
+    line-height: 1;
+  }
+  .label {
+    color: #9a6a2e;
+    margin-bottom: 18px;
+    font-size: 0.95em;
+  }
+  .stats {
+    background: #fff3d6;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin: 16px 0;
+    text-align: left;
+    font-size: 0.92em;
+    color: #6b4a1a;
+  }
+  .stats div { display: flex; justify-content: space-between; padding: 3px 0; }
+  .stats strong { color: #7a4a12; }
+  button {
+    border: none;
+    border-radius: 16px;
+    padding: 18px 30px;
+    font-size: 1.3em;
+    cursor: pointer;
+    margin: 6px;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  button:active { transform: scale(0.95); }
+  .plus {
+    background: #d99a2b;
+    color: white;
+    box-shadow: 0 6px 0 #a8721a;
+  }
+  .plus:active { box-shadow: 0 2px 0 #a8721a; }
+  .minus {
+    background: #eee;
+    color: #7a4a12;
+    box-shadow: 0 6px 0 #ccc;
+    font-size: 1em;
+    padding: 12px 22px;
+  }
+  .minus:active { box-shadow: 0 2px 0 #ccc; }
+  .settings {
+    margin-top: 18px;
+    text-align: left;
+    font-size: 0.85em;
+    color: #7a4a12;
+  }
+  .settings summary {
+    cursor: pointer;
+    text-align: center;
+    color: #b06a1a;
+    text-decoration: underline;
+    margin-bottom: 10px;
+  }
+  .settings label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+    gap: 10px;
+  }
+  .settings input {
+    width: 80px;
+    padding: 6px 8px;
+    border: 1px solid #d9b06a;
+    border-radius: 8px;
+    font-size: 1em;
+  }
+  .reset {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    color: #b06a1a;
+    text-decoration: underline;
+    box-shadow: none;
+    font-size: 0.85em;
+    padding: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>🍺 Urlaubs-Bier-Counter</h1>
+  <div class="sub">Zählt seit Urlaubsbeginn – bleibt gespeichert</div>
+
+  <div class="count" id="count">0</div>
+  <div class="label">Biere insgesamt im Urlaub</div>
+
+  <div>
+    <button class="minus" id="minus">−1</button>
+    <button class="plus" id="plus">+1 🍺</button>
+  </div>
+
+  <div class="stats">
+    <div><span>Reiner Alkohol:</span> <strong id="mg">0 mg</strong></div>
+    <div><span>(entspricht)</span> <strong id="g">0 g</strong></div>
+  </div>
+
+  <details class="settings">
+    <summary>Einstellungen (Biergröße & Stärke)</summary>
+    <label>Volumen pro Bier (ml)
+      <input type="number" id="volume" min="1" step="10">
+    </label>
+    <label>Alkoholgehalt (% vol)
+      <input type="number" id="abv" min="0" max="100" step="0.1">
+    </label>
+  </details>
+
+  <button class="reset" id="reset">Alles zurücksetzen</button>
+</div>
+
+<script>
+  const countEl = document.getElementById('count');
+  const mgEl = document.getElementById('mg');
+  const gEl = document.getElementById('g');
+  const plusBtn = document.getElementById('plus');
+  const minusBtn = document.getElementById('minus');
+  const resetBtn = document.getElementById('reset');
+  const volumeInput = document.getElementById('volume');
+  const abvInput = document.getElementById('abv');
+
+  // Dichte von reinem Ethanol: ~0.789 g/ml
+  const ETHANOL_DICHTE = 0.789;
+
+  let count = parseInt(localStorage.getItem('urlaubBierCount')) || 0;
+  let volume = parseFloat(localStorage.getItem('urlaubBierVolume')) || 500; // ml
+  let abv = parseFloat(localStorage.getItem('urlaubBierAbv')) || 5;        // %
+
+  volumeInput.value = volume;
+  abvInput.value = abv;
+
+  render();
+
+  function alkoholProBierInMg() {
+    // reiner Alkohol (g) = Volumen(ml) * (ABV/100) * Dichte
+    const gramm = volume * (abv / 100) * ETHANOL_DICHTE;
+    return gramm * 1000; // in mg
+  }
+
+  function render() {
+    countEl.textContent = count;
+    const gesamtMg = count * alkoholProBierInMg();
+    mgEl.textContent = Math.round(gesamtMg).toLocaleString('de-DE') + ' mg';
+    gEl.textContent = (gesamtMg / 1000).toFixed(1).replace('.', ',') + ' g';
+  }
+
+  function save() {
+    localStorage.setItem('urlaubBierCount', count);
+    localStorage.setItem('urlaubBierVolume', volume);
+    localStorage.setItem('urlaubBierAbv', abv);
+  }
+
+  plusBtn.addEventListener('click', () => {
+    count++;
+    render();
+    save();
+  });
+
+  minusBtn.addEventListener('click', () => {
+    if (count > 0) count--;
+    render();
+    save();
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (confirm('Wirklich den gesamten Urlaubs-Zähler auf 0 zurücksetzen?')) {
+      count = 0;
+      render();
+      save();
+    }
+  });
+
+  volumeInput.addEventListener('change', () => {
+    volume = parseFloat(volumeInput.value) || 500;
+    render();
+    save();
+  });
+
+  abvInput.addEventListener('change', () => {
+    abv = parseFloat(abvInput.value) || 5;
+    render();
+    save();
+  });
+</script>
+
+</body>
+</html>
