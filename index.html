@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>🍺 Urlaubs-Bier-Counter</title>
+<title>🍻 Urlaubs-Alkohol-Counter</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -15,216 +15,239 @@
     font-family: 'Segoe UI', Tahoma, sans-serif;
     padding: 20px;
   }
+  .wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 820px;
+  }
   .card {
     background: #fffbe9;
     border-radius: 24px;
-    padding: 36px 40px;
+    padding: 32px 34px;
     text-align: center;
     box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-    max-width: 380px;
+    max-width: 360px;
     width: 100%;
+    flex: 1 1 320px;
   }
-  h1 {
-    margin: 0 0 4px;
-    font-size: 1.5em;
-    color: #7a4a12;
-  }
-  .sub {
-    color: #9a6a2e;
-    font-size: 0.85em;
-    margin-bottom: 20px;
-  }
-  .count {
-    font-size: 4.2em;
-    font-weight: bold;
-    color: #b8722a;
-    margin: 4px 0;
-    user-select: none;
-    line-height: 1;
-  }
-  .label {
-    color: #9a6a2e;
-    margin-bottom: 18px;
-    font-size: 0.95em;
-  }
-  .stats {
-    background: #fff3d6;
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin: 16px 0;
-    text-align: left;
-    font-size: 0.92em;
-    color: #6b4a1a;
-  }
+  .card.pink { background: #fdeef3; }
+  h1 { margin: 0 0 4px; font-size: 1.4em; color: #7a4a12; }
+  .pink h1 { color: #8a2f57; }
+  .sub { color: #9a6a2e; font-size: 0.82em; margin-bottom: 18px; }
+  .pink .sub { color: #a85678; }
+  .count { font-size: 3.6em; font-weight: bold; color: #b8722a; margin: 4px 0; user-select: none; line-height: 1; }
+  .pink .count { color: #c94f80; }
+  .label { color: #9a6a2e; margin-bottom: 16px; font-size: 0.9em; }
+  .pink .label { color: #a85678; }
+  .stats { background: #fff3d6; border-radius: 14px; padding: 12px 14px; margin: 14px 0; text-align: left; font-size: 0.88em; color: #6b4a1a; }
+  .pink .stats { background: #fbe0e9; color: #7a3552; }
   .stats div { display: flex; justify-content: space-between; padding: 3px 0; }
   .stats strong { color: #7a4a12; }
-  button {
-    border: none;
-    border-radius: 16px;
-    padding: 18px 30px;
-    font-size: 1.3em;
-    cursor: pointer;
-    margin: 6px;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-  }
+  .pink .stats strong { color: #8a2f57; }
+  .inputs { display: flex; gap: 8px; margin: 12px 0; }
+  .inputs label { flex: 1; text-align: left; font-size: 0.78em; color: #7a4a12; }
+  .pink .inputs label { color: #8a2f57; }
+  .inputs input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #d9b06a; border-radius: 8px; font-size: 1em; }
+  .pink .inputs input { border-color: #e6a8c4; }
+  button { border: none; border-radius: 16px; padding: 16px 26px; font-size: 1.2em; cursor: pointer; margin: 5px; transition: transform 0.1s ease, box-shadow 0.1s ease; }
   button:active { transform: scale(0.95); }
-  .plus {
-    background: #d99a2b;
-    color: white;
-    box-shadow: 0 6px 0 #a8721a;
-  }
+  .plus { background: #d99a2b; color: white; box-shadow: 0 6px 0 #a8721a; }
   .plus:active { box-shadow: 0 2px 0 #a8721a; }
-  .minus {
-    background: #eee;
-    color: #7a4a12;
-    box-shadow: 0 6px 0 #ccc;
-    font-size: 1em;
-    padding: 12px 22px;
-  }
+  .pink .plus { background: #d9527f; box-shadow: 0 6px 0 #a83a5e; }
+  .pink .plus:active { box-shadow: 0 2px 0 #a83a5e; }
+  .minus { background: #eee; color: #7a4a12; box-shadow: 0 6px 0 #ccc; font-size: 0.95em; padding: 11px 20px; }
   .minus:active { box-shadow: 0 2px 0 #ccc; }
-  .settings {
-    margin-top: 18px;
-    text-align: left;
-    font-size: 0.85em;
-    color: #7a4a12;
-  }
-  .settings summary {
-    cursor: pointer;
-    text-align: center;
-    color: #b06a1a;
-    text-decoration: underline;
-    margin-bottom: 10px;
-  }
-  .settings label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 8px 0;
-    gap: 10px;
-  }
-  .settings input {
-    width: 80px;
-    padding: 6px 8px;
-    border: 1px solid #d9b06a;
-    border-radius: 8px;
-    font-size: 1em;
-  }
-  .reset {
-    display: block;
-    margin: 16px auto 0;
-    background: none;
-    color: #b06a1a;
-    text-decoration: underline;
-    box-shadow: none;
-    font-size: 0.85em;
-    padding: 4px;
-  }
+  .pink .minus { color: #8a2f57; }
+  .settings { margin-top: 14px; text-align: left; font-size: 0.82em; color: #7a4a12; }
+  .settings summary { cursor: pointer; text-align: center; color: #b06a1a; text-decoration: underline; margin-bottom: 10px; }
+  .settings label { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; gap: 10px; }
+  .settings input { width: 80px; padding: 6px 8px; border: 1px solid #d9b06a; border-radius: 8px; font-size: 1em; }
+  .reset { display: block; margin: 14px auto 0; background: none; color: #b06a1a; text-decoration: underline; box-shadow: none; font-size: 0.82em; padding: 4px; }
+  .pink .reset { color: #b0507a; }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>🍺 Urlaubs-Bier-Counter</h1>
-  <div class="sub">Zählt seit Urlaubsbeginn – bleibt gespeichert</div>
+<div class="wrapper">
 
-  <div class="count" id="count">0</div>
-  <div class="label">Biere insgesamt im Urlaub</div>
+  <!-- LINKS: BIER -->
+  <div class="card" id="beer-card">
+    <h1>🍺 Dein Bier</h1>
+    <div class="sub">Zählt seit Urlaubsbeginn</div>
 
-  <div>
-    <button class="minus" id="minus">−1</button>
-    <button class="plus" id="plus">+1 🍺</button>
+    <div class="count" id="beer-count">0</div>
+    <div class="label">Biere insgesamt</div>
+
+    <div>
+      <button class="minus" id="beer-minus">−1</button>
+      <button class="plus" id="beer-plus">+1 🍺</button>
+    </div>
+
+    <div class="stats">
+      <div><span>Reiner Alkohol:</span> <strong id="beer-mg">0 mg</strong></div>
+      <div><span>(entspricht)</span> <strong id="beer-g">0 g</strong></div>
+    </div>
+
+    <details class="settings">
+      <summary>Einstellungen</summary>
+      <label>Volumen pro Bier (ml)
+        <input type="number" id="beer-volume" min="1" step="10">
+      </label>
+      <label>Alkoholgehalt (% vol)
+        <input type="number" id="beer-abv" min="0" max="100" step="0.1">
+      </label>
+    </details>
+
+    <button class="reset" id="beer-reset">Zurücksetzen</button>
   </div>
 
-  <div class="stats">
-    <div><span>Reiner Alkohol:</span> <strong id="mg">0 mg</strong></div>
-    <div><span>(entspricht)</span> <strong id="g">0 g</strong></div>
+  <!-- RECHTS: ALLGEMEINER ALKOHOL -->
+  <div class="card pink" id="alc-card">
+    <h1>🍷 Alkohol (frei)</h1>
+    <div class="sub">Für jedes Getränk Menge & Stärke eintragen</div>
+
+    <div class="count" id="alc-count">0</div>
+    <div class="label">Getränke insgesamt</div>
+
+    <div class="inputs">
+      <label>Menge (ml)
+        <input type="number" id="alc-volume" min="1" step="10" value="200">
+      </label>
+      <label>Alkohol (%)
+        <input type="number" id="alc-abv" min="0" max="100" step="0.1" value="12">
+      </label>
+    </div>
+
+    <div>
+      <button class="minus" id="alc-minus">−1</button>
+      <button class="plus" id="alc-plus">+1 🥂</button>
+    </div>
+
+    <div class="stats">
+      <div><span>Reiner Alkohol:</span> <strong id="alc-mg">0 mg</strong></div>
+      <div><span>(entspricht)</span> <strong id="alc-g">0 g</strong></div>
+    </div>
+
+    <button class="reset" id="alc-reset">Zurücksetzen</button>
   </div>
 
-  <details class="settings">
-    <summary>Einstellungen (Biergröße & Stärke)</summary>
-    <label>Volumen pro Bier (ml)
-      <input type="number" id="volume" min="1" step="10">
-    </label>
-    <label>Alkoholgehalt (% vol)
-      <input type="number" id="abv" min="0" max="100" step="0.1">
-    </label>
-  </details>
-
-  <button class="reset" id="reset">Alles zurücksetzen</button>
 </div>
 
 <script>
-  const countEl = document.getElementById('count');
-  const mgEl = document.getElementById('mg');
-  const gEl = document.getElementById('g');
-  const plusBtn = document.getElementById('plus');
-  const minusBtn = document.getElementById('minus');
-  const resetBtn = document.getElementById('reset');
-  const volumeInput = document.getElementById('volume');
-  const abvInput = document.getElementById('abv');
+  const ETHANOL_DICHTE = 0.789; // g/ml
 
-  // Dichte von reinem Ethanol: ~0.789 g/ml
-  const ETHANOL_DICHTE = 0.789;
-
-  let count = parseInt(localStorage.getItem('urlaubBierCount')) || 0;
-  let volume = parseFloat(localStorage.getItem('urlaubBierVolume')) || 500; // ml
-  let abv = parseFloat(localStorage.getItem('urlaubBierAbv')) || 5;        // %
-
-  volumeInput.value = volume;
-  abvInput.value = abv;
-
-  render();
-
-  function alkoholProBierInMg() {
-    // reiner Alkohol (g) = Volumen(ml) * (ABV/100) * Dichte
-    const gramm = volume * (abv / 100) * ETHANOL_DICHTE;
-    return gramm * 1000; // in mg
+  function alkoholInMg(volumeMl, abvPercent) {
+    const gramm = volumeMl * (abvPercent / 100) * ETHANOL_DICHTE;
+    return gramm * 1000;
   }
+  function formatMg(mg) { return Math.round(mg).toLocaleString('de-DE') + ' mg'; }
+  function formatG(mg) { return (mg / 1000).toFixed(1).replace('.', ',') + ' g'; }
 
-  function render() {
-    countEl.textContent = count;
-    const gesamtMg = count * alkoholProBierInMg();
-    mgEl.textContent = Math.round(gesamtMg).toLocaleString('de-DE') + ' mg';
-    gEl.textContent = (gesamtMg / 1000).toFixed(1).replace('.', ',') + ' g';
-  }
+  /* ---------- BIER (links) ---------- */
+  (function() {
+    const countEl = document.getElementById('beer-count');
+    const mgEl = document.getElementById('beer-mg');
+    const gEl = document.getElementById('beer-g');
+    const plusBtn = document.getElementById('beer-plus');
+    const minusBtn = document.getElementById('beer-minus');
+    const resetBtn = document.getElementById('beer-reset');
+    const volumeInput = document.getElementById('beer-volume');
+    const abvInput = document.getElementById('beer-abv');
 
-  function save() {
-    localStorage.setItem('urlaubBierCount', count);
-    localStorage.setItem('urlaubBierVolume', volume);
-    localStorage.setItem('urlaubBierAbv', abv);
-  }
+    let count = parseInt(localStorage.getItem('urlaubBierCount')) || 0;
+    let volume = parseFloat(localStorage.getItem('urlaubBierVolume')) || 500;
+    let abv = parseFloat(localStorage.getItem('urlaubBierAbv')) || 5;
 
-  plusBtn.addEventListener('click', () => {
-    count++;
+    volumeInput.value = volume;
+    abvInput.value = abv;
+
+    function render() {
+      countEl.textContent = count;
+      const totalMg = count * alkoholInMg(volume, abv);
+      mgEl.textContent = formatMg(totalMg);
+      gEl.textContent = formatG(totalMg);
+    }
+    function save() {
+      localStorage.setItem('urlaubBierCount', count);
+      localStorage.setItem('urlaubBierVolume', volume);
+      localStorage.setItem('urlaubBierAbv', abv);
+    }
+
+    plusBtn.addEventListener('click', () => { count++; render(); save(); });
+    minusBtn.addEventListener('click', () => { if (count > 0) count--; render(); save(); });
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Bier-Zähler wirklich zurücksetzen?')) { count = 0; render(); save(); }
+    });
+    volumeInput.addEventListener('change', () => { volume = parseFloat(volumeInput.value) || 500; render(); save(); });
+    abvInput.addEventListener('change', () => { abv = parseFloat(abvInput.value) || 5; render(); save(); });
+
     render();
-    save();
-  });
+  })();
 
-  minusBtn.addEventListener('click', () => {
-    if (count > 0) count--;
-    render();
-    save();
-  });
+  /* ---------- ALLGEMEINER ALKOHOL (rechts) ---------- */
+  (function() {
+    const countEl = document.getElementById('alc-count');
+    const mgEl = document.getElementById('alc-mg');
+    const gEl = document.getElementById('alc-g');
+    const plusBtn = document.getElementById('alc-plus');
+    const minusBtn = document.getElementById('alc-minus');
+    const resetBtn = document.getElementById('alc-reset');
+    const volumeInput = document.getElementById('alc-volume');
+    const abvInput = document.getElementById('alc-abv');
 
-  resetBtn.addEventListener('click', () => {
-    if (confirm('Wirklich den gesamten Urlaubs-Zähler auf 0 zurücksetzen?')) {
-      count = 0;
+    let count = parseInt(localStorage.getItem('urlaubAlkCount')) || 0;
+    let totalMg = parseFloat(localStorage.getItem('urlaubAlkTotalMg')) || 0;
+    volumeInput.value = localStorage.getItem('urlaubAlkLastVolume') || volumeInput.value;
+    abvInput.value = localStorage.getItem('urlaubAlkLastAbv') || abvInput.value;
+
+    function render() {
+      countEl.textContent = count;
+      mgEl.textContent = formatMg(totalMg);
+      gEl.textContent = formatG(totalMg);
+    }
+    function save() {
+      localStorage.setItem('urlaubAlkCount', count);
+      localStorage.setItem('urlaubAlkTotalMg', totalMg);
+      localStorage.setItem('urlaubAlkLastVolume', volumeInput.value);
+      localStorage.setItem('urlaubAlkLastAbv', abvInput.value);
+    }
+
+    plusBtn.addEventListener('click', () => {
+      const v = parseFloat(volumeInput.value) || 0;
+      const a = parseFloat(abvInput.value) || 0;
+      count++;
+      totalMg += alkoholInMg(v, a);
       render();
       save();
-    }
-  });
+    });
 
-  volumeInput.addEventListener('change', () => {
-    volume = parseFloat(volumeInput.value) || 500;
-    render();
-    save();
-  });
+    minusBtn.addEventListener('click', () => {
+      if (count > 0) {
+        const v = parseFloat(volumeInput.value) || 0;
+        const a = parseFloat(abvInput.value) || 0;
+        count--;
+        totalMg = Math.max(0, totalMg - alkoholInMg(v, a));
+        render();
+        save();
+      }
+    });
 
-  abvInput.addEventListener('change', () => {
-    abv = parseFloat(abvInput.value) || 5;
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Alkohol-Zähler wirklich zurücksetzen?')) {
+        count = 0;
+        totalMg = 0;
+        render();
+        save();
+      }
+    });
+
+    volumeInput.addEventListener('change', save);
+    abvInput.addEventListener('change', save);
+
     render();
-    save();
-  });
+  })();
 </script>
 
 </body>
