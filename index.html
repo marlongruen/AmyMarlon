@@ -60,10 +60,6 @@
   .minus { background: #eee; color: #7a4a12; box-shadow: 0 6px 0 #ccc; font-size: 0.95em; padding: 11px 20px; }
   .minus:active { box-shadow: 0 2px 0 #ccc; }
   .pink .minus { color: #8a2f57; }
-  .settings { margin-top: 14px; text-align: left; font-size: 0.82em; color: #7a4a12; }
-  .settings summary { cursor: pointer; text-align: center; color: #b06a1a; text-decoration: underline; margin-bottom: 10px; }
-  .settings label { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; gap: 10px; }
-  .settings input { width: 80px; padding: 6px 8px; border: 1px solid #d9b06a; border-radius: 8px; font-size: 1em; }
   .reset { display: block; margin: 14px auto 0; background: none; color: #b06a1a; text-decoration: underline; box-shadow: none; font-size: 0.82em; padding: 4px; }
   .pink .reset { color: #b0507a; }
 </style>
@@ -72,65 +68,64 @@
 
 <div class="wrapper">
 
-  <!-- LINKS: BIER -->
-  <div class="card" id="beer-card">
-    <h1>🍺 Dein Bier</h1>
-    <div class="sub">Zählt seit Urlaubsbeginn</div>
-
-    <div class="count" id="beer-count">0</div>
-    <div class="label">Biere insgesamt</div>
-
-    <div>
-      <button class="minus" id="beer-minus">−1</button>
-      <button class="plus" id="beer-plus">+1 🍺</button>
-    </div>
-
-    <div class="stats">
-      <div><span>Reiner Alkohol:</span> <strong id="beer-mg">0 mg</strong></div>
-      <div><span>(entspricht)</span> <strong id="beer-g">0 g</strong></div>
-    </div>
-
-    <details class="settings">
-      <summary>Einstellungen</summary>
-      <label>Volumen pro Bier (ml)
-        <input type="number" id="beer-volume" min="1" step="10">
-      </label>
-      <label>Alkoholgehalt (% vol)
-        <input type="number" id="beer-abv" min="0" max="100" step="0.1">
-      </label>
-    </details>
-
-    <button class="reset" id="beer-reset">Zurücksetzen</button>
-  </div>
-
-  <!-- RECHTS: ALLGEMEINER ALKOHOL -->
-  <div class="card pink" id="alc-card">
-    <h1>🍷 Alkohol (frei)</h1>
+  <!-- LINKS: DU -->
+  <div class="card" id="mine-card">
+    <h1>🍺 Dein Alkohol</h1>
     <div class="sub">Für jedes Getränk Menge & Stärke eintragen</div>
 
-    <div class="count" id="alc-count">0</div>
+    <div class="count" id="mine-count">0</div>
     <div class="label">Getränke insgesamt</div>
 
     <div class="inputs">
       <label>Menge (ml)
-        <input type="number" id="alc-volume" min="1" step="10" value="200">
+        <input type="number" id="mine-volume" min="1" step="10" value="500">
       </label>
       <label>Alkohol (%)
-        <input type="number" id="alc-abv" min="0" max="100" step="0.1" value="12">
+        <input type="number" id="mine-abv" min="0" max="100" step="0.1" value="5">
       </label>
     </div>
 
     <div>
-      <button class="minus" id="alc-minus">−1</button>
-      <button class="plus" id="alc-plus">+1 🥂</button>
+      <button class="minus" id="mine-minus">−1</button>
+      <button class="plus" id="mine-plus">+1 🍺</button>
     </div>
 
     <div class="stats">
-      <div><span>Reiner Alkohol:</span> <strong id="alc-mg">0 mg</strong></div>
-      <div><span>(entspricht)</span> <strong id="alc-g">0 g</strong></div>
+      <div><span>Reiner Alkohol:</span> <strong id="mine-mg">0 mg</strong></div>
+      <div><span>(entspricht)</span> <strong id="mine-g">0 g</strong></div>
     </div>
 
-    <button class="reset" id="alc-reset">Zurücksetzen</button>
+    <button class="reset" id="mine-reset">Zurücksetzen</button>
+  </div>
+
+  <!-- RECHTS: FREUNDIN -->
+  <div class="card pink" id="partner-card">
+    <h1>🍷 Ihr Alkohol</h1>
+    <div class="sub">Für jedes Getränk Menge & Stärke eintragen</div>
+
+    <div class="count" id="partner-count">0</div>
+    <div class="label">Getränke insgesamt</div>
+
+    <div class="inputs">
+      <label>Menge (ml)
+        <input type="number" id="partner-volume" min="1" step="10" value="200">
+      </label>
+      <label>Alkohol (%)
+        <input type="number" id="partner-abv" min="0" max="100" step="0.1" value="12">
+      </label>
+    </div>
+
+    <div>
+      <button class="minus" id="partner-minus">−1</button>
+      <button class="plus" id="partner-plus">+1 🥂</button>
+    </div>
+
+    <div class="stats">
+      <div><span>Reiner Alkohol:</span> <strong id="partner-mg">0 mg</strong></div>
+      <div><span>(entspricht)</span> <strong id="partner-g">0 g</strong></div>
+    </div>
+
+    <button class="reset" id="partner-reset">Zurücksetzen</button>
   </div>
 
 </div>
@@ -145,62 +140,21 @@
   function formatMg(mg) { return Math.round(mg).toLocaleString('de-DE') + ' mg'; }
   function formatG(mg) { return (mg / 1000).toFixed(1).replace('.', ',') + ' g'; }
 
-  /* ---------- BIER (links) ---------- */
-  (function() {
-    const countEl = document.getElementById('beer-count');
-    const mgEl = document.getElementById('beer-mg');
-    const gEl = document.getElementById('beer-g');
-    const plusBtn = document.getElementById('beer-plus');
-    const minusBtn = document.getElementById('beer-minus');
-    const resetBtn = document.getElementById('beer-reset');
-    const volumeInput = document.getElementById('beer-volume');
-    const abvInput = document.getElementById('beer-abv');
+  // Erzeugt einen unabhängigen Tracker mit eigenem Prefix (= eigene localStorage-Keys)
+  function createTracker(prefix, storageKeyPrefix) {
+    const countEl = document.getElementById(prefix + '-count');
+    const mgEl = document.getElementById(prefix + '-mg');
+    const gEl = document.getElementById(prefix + '-g');
+    const plusBtn = document.getElementById(prefix + '-plus');
+    const minusBtn = document.getElementById(prefix + '-minus');
+    const resetBtn = document.getElementById(prefix + '-reset');
+    const volumeInput = document.getElementById(prefix + '-volume');
+    const abvInput = document.getElementById(prefix + '-abv');
 
-    let count = parseInt(localStorage.getItem('urlaubBierCount')) || 0;
-    let volume = parseFloat(localStorage.getItem('urlaubBierVolume')) || 500;
-    let abv = parseFloat(localStorage.getItem('urlaubBierAbv')) || 5;
-
-    volumeInput.value = volume;
-    abvInput.value = abv;
-
-    function render() {
-      countEl.textContent = count;
-      const totalMg = count * alkoholInMg(volume, abv);
-      mgEl.textContent = formatMg(totalMg);
-      gEl.textContent = formatG(totalMg);
-    }
-    function save() {
-      localStorage.setItem('urlaubBierCount', count);
-      localStorage.setItem('urlaubBierVolume', volume);
-      localStorage.setItem('urlaubBierAbv', abv);
-    }
-
-    plusBtn.addEventListener('click', () => { count++; render(); save(); });
-    minusBtn.addEventListener('click', () => { if (count > 0) count--; render(); save(); });
-    resetBtn.addEventListener('click', () => {
-      if (confirm('Bier-Zähler wirklich zurücksetzen?')) { count = 0; render(); save(); }
-    });
-    volumeInput.addEventListener('change', () => { volume = parseFloat(volumeInput.value) || 500; render(); save(); });
-    abvInput.addEventListener('change', () => { abv = parseFloat(abvInput.value) || 5; render(); save(); });
-
-    render();
-  })();
-
-  /* ---------- ALLGEMEINER ALKOHOL (rechts) ---------- */
-  (function() {
-    const countEl = document.getElementById('alc-count');
-    const mgEl = document.getElementById('alc-mg');
-    const gEl = document.getElementById('alc-g');
-    const plusBtn = document.getElementById('alc-plus');
-    const minusBtn = document.getElementById('alc-minus');
-    const resetBtn = document.getElementById('alc-reset');
-    const volumeInput = document.getElementById('alc-volume');
-    const abvInput = document.getElementById('alc-abv');
-
-    let count = parseInt(localStorage.getItem('urlaubAlkCount')) || 0;
-    let totalMg = parseFloat(localStorage.getItem('urlaubAlkTotalMg')) || 0;
-    volumeInput.value = localStorage.getItem('urlaubAlkLastVolume') || volumeInput.value;
-    abvInput.value = localStorage.getItem('urlaubAlkLastAbv') || abvInput.value;
+    let count = parseInt(localStorage.getItem(storageKeyPrefix + 'Count')) || 0;
+    let totalMg = parseFloat(localStorage.getItem(storageKeyPrefix + 'TotalMg')) || 0;
+    volumeInput.value = localStorage.getItem(storageKeyPrefix + 'LastVolume') || volumeInput.value;
+    abvInput.value = localStorage.getItem(storageKeyPrefix + 'LastAbv') || abvInput.value;
 
     function render() {
       countEl.textContent = count;
@@ -208,10 +162,10 @@
       gEl.textContent = formatG(totalMg);
     }
     function save() {
-      localStorage.setItem('urlaubAlkCount', count);
-      localStorage.setItem('urlaubAlkTotalMg', totalMg);
-      localStorage.setItem('urlaubAlkLastVolume', volumeInput.value);
-      localStorage.setItem('urlaubAlkLastAbv', abvInput.value);
+      localStorage.setItem(storageKeyPrefix + 'Count', count);
+      localStorage.setItem(storageKeyPrefix + 'TotalMg', totalMg);
+      localStorage.setItem(storageKeyPrefix + 'LastVolume', volumeInput.value);
+      localStorage.setItem(storageKeyPrefix + 'LastAbv', abvInput.value);
     }
 
     plusBtn.addEventListener('click', () => {
@@ -235,7 +189,7 @@
     });
 
     resetBtn.addEventListener('click', () => {
-      if (confirm('Alkohol-Zähler wirklich zurücksetzen?')) {
+      if (confirm('Zähler wirklich zurücksetzen?')) {
         count = 0;
         totalMg = 0;
         render();
@@ -247,7 +201,13 @@
     abvInput.addEventListener('change', save);
 
     render();
-  })();
+  }
+
+  // Dein Tracker: komplett neue Keys (unabhängig vom alten Bier-Counter)
+  createTracker('mine', 'urlaubMarlonAlk');
+
+  // Tracker deiner Freundin: eigene Keys, unabhängig von deinem
+  createTracker('partner', 'urlaubPartnerAlk');
 </script>
 
 </body>
